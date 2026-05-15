@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIX Tech - Admin Gateway</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Centers the login card perfectly on a full screen */
+        .login-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: var(--bg-color, #2b302c); /* Fallback to your dark theme background */
+            margin: 0;
+            font-family: sans-serif;
+        }
+        .login-card {
+            background-color: #dbe0d5; /* Matches your theme's clean form panel color */
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            width: 100%;
+            max-width: 380px;
+            box-sizing: border-box;
+        }
+        .login-brand {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--primary-color, #4a6b5d);
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .forgot-link {
+            display: block;
+            text-align: right;
+            margin-top: 12px;
+            color: var(--primary-color, #4a6b5d);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body class="login-wrapper">
+
+    <div class="login-card auth-container">
+        <div class="logo-sidebar" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; margin-bottom: 30px; margin-top: 10px;">
+            <svg width="120" height="55" viewBox="0 0 120 55" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
+                <text x="50%" y="60%" dominant-baseline="middle" text-anchor="middle" fill="var(--primary-color)" font-size="46" font-weight="900" font-family="'Segoe UI', Tahoma, sans-serif" letter-spacing="-2">aix</text>
+                <circle cx="102" cy="15" r="5" fill="var(--primary-color)"/>
+            </svg>
+            <span style="font-size: 11px; font-weight: bold; letter-spacing: 1.5px; color: var(--primary-color); margin-top: 2px; text-transform: uppercase;">
+                Arcane Innovation Tech
+            </span>
+        </div>
+        
+        <div class="form-group">
+            <label style="color: #333; font-weight: bold;">Username</label>
+            <input type="text" id="loginUsername" placeholder="Enter credentials" required 
+                   style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #aaa; box-sizing: border-box; margin-top: 5px;">
+        </div>
+        
+        <div class="form-group" style="margin-top: 20px;">
+            <label style="color: #333; font-weight: bold;">Password</label>
+            <input type="password" id="loginPassword" placeholder="Enter password" required 
+                   style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #aaa; box-sizing: border-box; margin-top: 5px;">
+        </div>
+        
+        <button class="btn-primary" onclick="submitLogin()" 
+                style="width: 100%; padding: 12px; margin-top: 25px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer;">
+            Sign In
+        </button>
+        
+        <a href="forgot.html" class="forgot-link">Forgot Password?</a>
+    </div>
+
+    <script src="login.js"></script>
+</body>
+</html>

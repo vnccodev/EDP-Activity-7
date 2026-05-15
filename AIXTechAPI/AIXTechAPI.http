@@ -1,0 +1,6 @@
+@AIXTechAPI_HostAddress = http://localhost:5291
+
+GET {{AIXTechAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

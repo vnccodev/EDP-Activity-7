@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIX Tech - Create New Password</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="login-wrapper">
+
+    <div class="auth-container">
+        <div class="login-brand">aix</div>
+        
+        <h3 style="margin-bottom: 25px; margin-top: 0;">Secure Reset</h3>
+        
+        <input type="hidden" id="resetToken">
+        
+        <div class="form-group">
+            <label>New Password</label>
+            <input type="password" id="newPass" placeholder="Enter new password" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Confirm Password</label>
+            <input type="password" id="confirmPass" placeholder="Confirm new password" required>
+        </div>
+        
+        <button class="btn-primary" onclick="submitNewPassword()" style="margin-top: 25px;">
+            Update Password
+        </button>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            
+            if (!token) {
+                alert("Security Error: Missing recovery token. Please request a new link.");
+                window.location.href = 'forgot.html';
+            } else {
+                document.getElementById('resetToken').value = token;
+            }
+        };
+
+        function submitNewPassword() {
+            const token = document.getElementById('resetToken').value;
+            const pass = document.getElementById('newPass').value;
+            const confirm = document.getElementById('confirmPass').value;
+
+            if (!pass || pass !== confirm) {
+                alert("Passwords do not match or are empty. Please verify.");
+                return;
+            }
+
+            fetch('http://localhost:5291/api/auth/reset-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ Token: token, NewPassword: pass })
+            })
+            .then(async response => {
+                const data = await response.json();
+                if (response.ok) {
+                    alert("Password successfully updated! You can now sign in.");
+                    window.location.href = 'login.html';
+                } else {
+                    alert("Reset Failed: " + data.message);
+                }
+            })
+            .catch(err => console.error("Reset fault:", err));
+        }
+    </script>
+</body>
+</html>

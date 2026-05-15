@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIX Tech - Customers & Accounts Directory</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 10px 20px;
+            font-size: var(--font-base);
+            font-weight: bold;
+            color: var(--text-color);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-right: 10px;
+        }
+        .tab-btn.active {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+        }
+    </style>
+</head>
+<body class="dashboard-body">
+
+    <div class="sidebar">
+        <div class="logo-sidebar" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; margin-bottom: 30px; margin-top: 10px;">
+            <svg width="120" height="55" viewBox="0 0 120 55" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
+                <text x="50%" y="60%" dominant-baseline="middle" text-anchor="middle" fill="var(--primary-color)" font-size="46" font-weight="900" font-family="'Segoe UI', Tahoma, sans-serif" letter-spacing="-2">aix</text>
+                <circle cx="102" cy="15" r="5" fill="var(--primary-color)"/>
+            </svg>
+            <span style="font-size: 11px; font-weight: bold; letter-spacing: 1.5px; color: var(--primary-color); margin-top: 2px; text-transform: uppercase;">
+                Arcane Innovation Tech
+            </span>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="overview.html">Overview</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="dashboard.html" class="active">Customers / Users</a></li>
+            <li><a href="transactions.html">Transactions</a></li>
+            <li><a href="reports.html">Reports</a></li>
+            <li><a href="about.html">About Us</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="header" style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: none; padding-bottom: 10px; margin-bottom: 25px;">
+            
+            <div class="header-titles">
+                <h2 style="margin: 0; color: var(--primary-color); font-size: 26px;">Directory Management</h2>
+                <span class="page-subtitle">Manage the Users' & Customers' Information</span>
+            </div>
+
+            <div class="header-right-stack" style="display: flex; flex-direction: column; align-items: flex-end; gap: 12px;">
+                
+                <div class="header-controls" style="display: flex; align-items: center; gap: 18px; position: relative;">
+                    
+                    <button class="btn-notification" aria-label="Notifications">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                    </button>
+
+                    <div class="profile-capsule" id="profileCapsuleBtn" onclick="toggleProfileMenu(event)">
+                        <div class="avatar-wrapper">
+                            <img src="profile.jpg" alt="Vince T." onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="avatar-fallback" style="display: none;">VT</div>
+                        </div>
+                        
+                        <div class="profile-info">
+                            <span class="profile-name">Vince T.</span>
+                            <span class="profile-role">Admin</span>
+                        </div>
+
+                        <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+
+                    <div class="profile-dropdown" id="profileDropdownMenu">
+                        <a href="#" class="dropdown-item">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            My Profile
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                            </svg>
+                            Settings
+                        </a>
+                        <a href="#" class="dropdown-item logout-link" onclick="executeLogout(); return false;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            Logout
+                        </a>
+                    </div>
+
+                </div>
+
+                <div class="header-actions" style="display: flex; gap: 10px;">
+                    <button class="btn-primary" id="btnAddUserBtn" style="width: auto; padding: 8px 16px;" onclick="openAddUserModal()">+ Add User</button>
+                    <button class="btn-primary hidden" id="btnAddCustBtn" style="width: auto; padding: 8px 16px;" onclick="openAddCustModal()">+ Register Customer</button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div style="margin-bottom: 20px; border-bottom: 1px solid #ccc; margin-top: 10px;">
+            <button class="tab-btn active" id="btnTabUsers" onclick="switchDirectoryTab('users')">System Accounts (Staff/Admin)</button>
+            <button class="tab-btn" id="btnTabCust" onclick="switchDirectoryTab('cust')">Client Directory (Customers)</button>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" id="searchDirectoryInput" placeholder="Search accounts directory..." onkeyup="executeActiveSearch()">
+        </div>
+
+        <div id="tabUsersContent">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>USERNAME</th>
+                        <th>EMAIL</th>
+                        <th>ROLE</th>
+                        <th>STATUS</th>
+                        <th>ACTION</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                    </tbody>
+            </table>
+        </div>
+
+        <div id="tabCustContent" class="hidden">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>CUST ID</th>
+                        <th>FULL NAME</th>
+                        <th>EMAIL CONTACT</th>
+                        <th>PHONE</th>
+                        <th>PHYSICAL ADDRESS</th>
+                        <th>ACTION</th>
+                    </tr>
+                </thead>
+                <tbody id="custTableBody">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="addUserModal" class="modal hidden">
+        <div class="modal-content auth-container">
+            <h3>Add System User</h3>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="newUserName" required>
+            </div>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="newUserEmail" required>
+            </div>
+            <div class="form-group">
+                <label>Temporary Password</label>
+                <input type="password" id="newUserPass" required>
+            </div>
+            <div class="form-group">
+                <label>System Role</label>
+                <select id="newUserRole">
+                    <option value="Staff">Staff</option>
+                    <option value="Admin">Admin</option>
+                </select>
+            </div>
+            <button class="btn-primary" onclick="submitNewUser()">Commit Account</button>
+            <button class="btn-secondary" onclick="closeAddUserModal()">Cancel</button>
+        </div>
+    </div>
+
+    <div id="editUserModal" class="modal hidden">
+        <div class="modal-content auth-container">
+            <h3>Edit Account Profile</h3>
+            <input type="hidden" id="editUserId">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="editUserName" required>
+            </div>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="editUserEmail" required>
+            </div>
+            <div class="form-group">
+                <label>Permission Role</label>
+                <select id="editUserRole">
+                    <option value="Staff">Staff</option>
+                    <option value="Admin">Admin</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Account Status</label>
+                <select id="editUserStatus">
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                </select>
+            </div>
+            <button class="btn-primary" onclick="submitEditUser()">Save Profile</button>
+            <button class="btn-secondary" onclick="closeEditUserModal()">Cancel</button>
+        </div>
+    </div>
+
+    <div id="deleteUserModal" class="modal hidden">
+        <div class="modal-content auth-container">
+            <h3 style="color: #a84242;">Confirm Permanent Purge</h3>
+            <p style="margin-bottom: 20px; font-size: 14px;">Purge internal system credentials:<br><strong id="lblDeleteTargetUser"></strong></p>
+            <input type="hidden" id="pendingDeleteUserId">
+            <button class="btn-primary" style="background-color: #a84242; margin-bottom: 10px;" onclick="executeDeleteUser()">Yes, Purge Record</button>
+            <button class="btn-secondary" onclick="closeDeleteUserModal()">Cancel</button>
+        </div>
+    </div>
+
+    <div id="addCustModal" class="modal hidden">
+        <div class="modal-content auth-container">
+            <h3>Register Client Profile</h3>
+            <div class="form-group">
+                <label>First Name</label>
+                <input type="text" id="newCustFirst" required>
+            </div>
+            <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" id="newCustLast" required>
+            </div>
+            <div class="form-group">
+                <label>Email Contact</label>
+                <input type="email" id="newCustEmail">
+            </div>
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="text" id="newCustPhone">
+            </div>
+            <div class="form-group">
+                <label>Physical Address</label>
+                <input type="text" id="newCustAddress">
+            </div>
+            <button class="btn-primary" onclick="submitNewCustomer()">Register Client</button>
+            <button class="btn-secondary" onclick="closeAddCustModal()">Cancel</button>
+        </div>
+    </div>
+
+    <div id="editCustModal" class="modal hidden">
+        <div class="modal-content auth-container">
+            <h3>Edit Client Record</h3>
+            <input type="hidden" id="editCustId">
+            <div class="form-group">
+                <label>First Name</label>
+                <input type="text" id="editCustFirst" required>
+            </div>
+            <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" id="editCustLast" required>
+            </div>
+            <div class="form-group">
+                <label>Email Contact</label>
+                <input type="email" id="editCustEmail">
+            </div>
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="text" id="editCustPhone">
+            </div>
+            <div class="form-group">
+                <label>Physical Address</label>
+                <input type="text" id="editCustAddress">
+            </div>
+            <button class="btn-primary" onclick="submitEditCustomer()">Save Updates</button>
+            <button class="btn-secondary" onclick="closeEditCustModal()">Cancel</button>
+        </div>
+    </div>
+
+    <div id="deleteCustModal" class="modal hidden">
+        <div class="modal-content auth-container">
+            <h3 style="color: #a84242;">Confirm Client Purge</h3>
+            <p style="margin-bottom: 20px; font-size: 14px;">Purge physical client master entry:<br><strong id="lblDeleteTargetCust"></strong></p>
+            <input type="hidden" id="pendingDeleteCustId">
+            <button class="btn-primary" style="background-color: #a84242; margin-bottom: 10px;" onclick="executeDeleteCustomer()">Yes, Purge Client</button>
+            <button class="btn-secondary" onclick="closeDeleteCustModal()">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        let currentActiveTab = 'users';
+
+        window.onload = function() {
+            if (localStorage.getItem('aix_authenticated') !== 'true') {
+                window.location.href = 'login.html';
+            } else {
+                loadSystemUsers();
+                loadCustomers();
+            }
+        };
+
+        function executeLogout() {
+            localStorage.removeItem('aix_authenticated');
+            localStorage.removeItem('aix_active_user');
+            window.location.href = 'login.html';
+        }
+
+        // ===================================================
+        // TAB MANAGEMENT & DYNAMIC SEARCH PIPELINE
+        // ===================================================
+        function switchDirectoryTab(target) {
+            currentActiveTab = target;
+            const btnUsers = document.getElementById('btnTabUsers');
+            const btnCust = document.getElementById('btnTabCust');
+            const contentUsers = document.getElementById('tabUsersContent');
+            const contentCust = document.getElementById('tabCustContent');
+            const addUseBtn = document.getElementById('btnAddUserBtn');
+            const addCusBtn = document.getElementById('btnAddCustBtn');
+            const searchBox = document.getElementById('searchDirectoryInput');
+
+            if (target === 'users') {
+                btnUsers.classList.add('active'); btnCust.classList.remove('active');
+                contentUsers.classList.remove('hidden'); contentCust.classList.add('hidden');
+                addUseBtn.classList.remove('hidden'); addCusBtn.classList.add('hidden');
+                searchBox.placeholder = "Search system accounts...";
+                loadSystemUsers();
+            } else {
+                btnCust.classList.add('active'); btnUsers.classList.remove('active');
+                contentCust.classList.remove('hidden'); contentUsers.classList.add('hidden');
+                addCusBtn.classList.remove('hidden'); addUseBtn.classList.add('hidden');
+                searchBox.placeholder = "Search registered client directory...";
+                loadCustomers();
+            }
+        }
+
+        function executeActiveSearch() {
+            if (currentActiveTab === 'users') loadSystemUsers();
+            else loadCustomers();
+        }
+
+        // ===================================================
+        // PIPELINE A: SYSTEM ACCOUNTS (users table)
+        // ===================================================
+        function loadSystemUsers() {
+            const term = document.getElementById('searchDirectoryInput').value;
+            fetch(`http://localhost:5291/api/user/search?term=${encodeURIComponent(term)}`)
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.getElementById('userTableBody');
+                    if (!tbody) return;
+                    tbody.innerHTML = "";
+                    data.forEach(u => {
+                        const tr = document.createElement('tr');
+                        const statusBadge = (u.is_active || u.is_active === "1" || u.status === "Active") ? 
+                            '<span style="color: #6a957a; font-weight:bold;">Active</span>' : 
+                            '<span style="color: #a84242; font-weight:bold;">Inactive</span>';
+
+                        tr.innerHTML = `
+                            <td>${u.user_id || u.id}</td>
+                            <td><strong>${u.username}</strong></td>
+                            <td>${u.email}</td>
+                            <td>${u.role}</td>
+                            <td>${statusBadge}</td>
+                            <td>
+                                <button type="button" style="cursor:pointer; color:#6a957a; background:none; border:none; font-weight:bold; text-decoration:underline; margin-right:10px;"
+                                    data-id="${u.user_id || u.id}" data-name="${u.username}" data-email="${u.email}" data-role="${u.role}" data-status="${u.is_active}"
+                                    onclick="triggerEditUser(this)">Edit</button>
+                                <button type="button" style="cursor:pointer; color:#a84242; background:none; border:none; font-weight:bold; text-decoration:underline;"
+                                    onclick="requestDeleteUser(${u.user_id || u.id}, '${u.username}')">Delete</button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }).catch(err => console.error("User fetch broken:", err));
+        }
+
+        function openAddUserModal() { document.getElementById('addUserModal').classList.remove('hidden'); }
+        function closeAddUserModal() { document.getElementById('addUserModal').classList.add('hidden'); }
+
+        function submitNewUser() {
+            const u = document.getElementById('newUserName').value.trim();
+            const e = document.getElementById('newUserEmail').value.trim();
+            const p = document.getElementById('newUserPass').value;
+            const r = document.getElementById('newUserRole').value;
+            if (!u || !e || !p) return;
+
+            fetch('http://localhost:5291/api/user/add', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ Username: u, Email: e, Password: p, Role: r })
+            }).then(res => { if (res.ok) { closeAddUserModal(); loadSystemUsers(); } });
+        }
+
+        function triggerEditUser(btn) {
+            document.getElementById('editUserId').value = btn.getAttribute('data-id');
+            document.getElementById('editUserName').value = btn.getAttribute('data-name');
+            document.getElementById('editUserEmail').value = btn.getAttribute('data-email');
+            document.getElementById('editUserRole').value = btn.getAttribute('data-role');
+            const isActive = btn.getAttribute('data-status');
+            document.getElementById('editUserStatus').value = (isActive === "true" || isActive === "1" || isActive === true) ? "true" : "false";
+            document.getElementById('editUserModal').classList.remove('hidden');
+        }
+        function closeEditUserModal() { document.getElementById('editUserModal').classList.add('hidden'); }
+
+        function submitEditUser() {
+            const id = parseInt(document.getElementById('editUserId').value, 10);
+            const payload = {
+                UserId: id, Username: document.getElementById('editUserName').value.trim(),
+                Email: document.getElementById('editUserEmail').value.trim(),
+                Role: document.getElementById('editUserRole').value,
+                IsActive: document.getElementById('editUserStatus').value === "true"
+            };
+            fetch('http://localhost:5291/api/user/update', {
+                method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+            }).then(res => { if (res.ok) { closeEditUserModal(); loadSystemUsers(); } });
+        }
+
+        function requestDeleteUser(id, name) {
+            document.getElementById('pendingDeleteUserId').value = id;
+            document.getElementById('lblDeleteTargetUser').innerText = `${name} (ID: ${id})`;
+            document.getElementById('deleteUserModal').classList.remove('hidden');
+        }
+        function closeDeleteUserModal() { document.getElementById('deleteUserModal').classList.add('hidden'); }
+
+        function executeDeleteUser() {
+            const id = parseInt(document.getElementById('pendingDeleteUserId').value, 10);
+            fetch(`http://localhost:5291/api/user/delete/${id}`, { method: 'DELETE' })
+                .then(res => { if (res.ok) { closeDeleteUserModal(); loadSystemUsers(); } });
+        }
+
+        // ===================================================
+        // PIPELINE B: CLIENT DIRECTORY (customers table)
+        // ===================================================
+        function loadCustomers() {
+            const term = document.getElementById('searchDirectoryInput').value;
+            fetch(`http://localhost:5291/api/customer/search?term=${encodeURIComponent(term)}`)
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.getElementById('custTableBody');
+                    if (!tbody) return;
+                    tbody.innerHTML = "";
+                    data.forEach(c => {
+                        const tr = document.createElement('tr');
+                        const fullName = `${c.first_name} ${c.last_name}`;
+                        tr.innerHTML = `
+                            <td><strong>#${c.customer_id}</strong></td>
+                            <td><strong style="color: var(--primary-color);">${fullName}</strong></td>
+                            <td>${c.email || "N/A"}</td>
+                            <td>${c.phone || "N/A"}</td>
+                            <td style="font-size:13px; color:#555;">${c.address || "N/A"}</td>
+                            <td>
+                                <button type="button" style="cursor:pointer; color:#6a957a; background:none; border:none; font-weight:bold; text-decoration:underline; margin-right:10px;"
+                                    data-id="${c.customer_id}" data-first="${c.first_name}" data-last="${c.last_name}" data-email="${c.email}" data-phone="${c.phone}" data-address="${c.address}"
+                                    onclick="triggerEditCustomer(this)">Edit</button>
+                                <button type="button" style="cursor:pointer; color:#a84242; background:none; border:none; font-weight:bold; text-decoration:underline;"
+                                    onclick="requestDeleteCustomer(${c.customer_id}, '${fullName.replace(/'/g, "\\'")}')">Delete</button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }).catch(err => console.error("Client fetch broken:", err));
+        }
+
+        function openAddCustModal() { document.getElementById('addCustModal').classList.remove('hidden'); }
+        function closeAddCustModal() { 
+            document.getElementById('addCustModal').classList.add('hidden'); 
+            document.getElementById('newCustFirst').value = ""; document.getElementById('newCustLast').value = "";
+            document.getElementById('newCustEmail').value = ""; document.getElementById('newCustPhone').value = "";
+            document.getElementById('newCustAddress').value = "";
+        }
+
+        function submitNewCustomer() {
+            const f = document.getElementById('newCustFirst').value.trim();
+            const l = document.getElementById('newCustLast').value.trim();
+            const e = document.getElementById('newCustEmail').value.trim();
+            const p = document.getElementById('newCustPhone').value.trim();
+            const a = document.getElementById('newCustAddress').value.trim();
+            if (!f || !l) { alert("First and Last name required."); return; }
+
+            fetch('http://localhost:5291/api/customer/add', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ FirstName: f, LastName: l, Email: e, Phone: p, Address: a })
+            }).then(res => { if (res.ok) { closeAddCustModal(); loadCustomers(); } });
+        }
+
+        function triggerEditCustomer(btn) {
+            document.getElementById('editCustId').value = btn.getAttribute('data-id');
+            document.getElementById('editCustFirst').value = btn.getAttribute('data-first');
+            document.getElementById('editCustLast').value = btn.getAttribute('data-last');
+            document.getElementById('editCustEmail').value = btn.getAttribute('data-email');
+            document.getElementById('editCustPhone').value = btn.getAttribute('data-phone');
+            document.getElementById('editCustAddress').value = btn.getAttribute('data-address');
+            document.getElementById('editCustModal').classList.remove('hidden');
+        }
+        function closeEditCustModal() { document.getElementById('editCustModal').classList.add('hidden'); }
+
+        function submitEditCustomer() {
+            const id = parseInt(document.getElementById('editCustId').value, 10);
+            const payload = {
+                CustomerId: id, FirstName: document.getElementById('editCustFirst').value.trim(),
+                LastName: document.getElementById('editCustLast').value.trim(),
+                Email: document.getElementById('editCustEmail').value.trim(),
+                Phone: document.getElementById('editCustPhone').value.trim(),
+                Address: document.getElementById('editCustAddress').value.trim()
+            };
+            fetch('http://localhost:5291/api/customer/update', {
+                method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+            }).then(res => { if (res.ok) { closeEditCustModal(); loadCustomers(); } });
+        }
+
+        function requestDeleteCustomer(id, name) {
+            document.getElementById('pendingDeleteCustId').value = id;
+            document.getElementById('lblDeleteTargetCust').innerText = `${name} (ID: ${id})`;
+            document.getElementById('deleteCustModal').classList.remove('hidden');
+        }
+        function closeDeleteCustModal() { document.getElementById('deleteCustModal').classList.add('hidden'); }
+
+        function executeDeleteCustomer() {
+            const id = parseInt(document.getElementById('pendingDeleteCustId').value, 10);
+            fetch(`http://localhost:5291/api/customer/delete/${id}`, { method: 'DELETE' })
+                .then(res => { if (res.ok) { closeDeleteCustModal(); loadCustomers(); } });
+        }
+
+        function executeDeleteCustomer() {
+            const id = parseInt(document.getElementById('pendingDeleteCustId').value, 10);
+            fetch(`http://localhost:5291/api/customer/delete/${id}`, { method: 'DELETE' })
+                .then(res => { if (res.ok) { closeDeleteCustModal(); loadCustomers(); } });
+        }
+
+        // ===================================================
+        // PROFILE CAPSULE DROPDOWN CONTROLS (PASTE HERE)
+        // ===================================================
+        function toggleProfileMenu(event) {
+            event.stopPropagation();
+            const capsule = document.getElementById('profileCapsuleBtn');
+            const menu = document.getElementById('profileDropdownMenu');
+            
+            if (capsule && menu) {
+                capsule.classList.toggle('active');
+                menu.classList.toggle('show');
+            }
+        }
+
+        document.addEventListener('click', function(event) {
+            const capsule = document.getElementById('profileCapsuleBtn');
+            const menu = document.getElementById('profileDropdownMenu');
+            
+            if (capsule && menu && menu.classList.contains('show')) {
+                if (!capsule.contains(event.target) && !menu.contains(event.target)) {
+                    capsule.classList.remove('active');
+                    menu.classList.remove('show');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

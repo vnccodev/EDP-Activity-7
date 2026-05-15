@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIX Tech - System Reports & Financial Analytics</title>
+    <link rel="stylesheet" href="styles.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    
+    <style>
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+        .overview-card {
+            background-color: var(--panel-bg);
+            padding: 22px;
+            border-radius: 10px;
+            border: 1px solid #c2c9bd;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .overview-card::before {
+            content: "";
+            position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background-color: var(--primary-color);
+        }
+        .overview-card.alert-card::before { background-color: #a84242; }
+        .overview-card h4 {
+            margin: 0 0 8px 0; font-size: var(--font-sm);
+            color: var(--text-color); text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .metric-val {
+            font-size: 32px; font-weight: bold;
+            color: var(--primary-color); margin: 0 0 5px 0;
+        }
+        .alert-card .metric-val { color: #a84242; }
+        .chart-container {
+            background: var(--white); border-radius: 8px;
+            border: 1px solid #c2c9bd; padding: 20px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body class="dashboard-body">
+
+    <div class="sidebar">
+        <div class="logo-sidebar" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; margin-bottom: 30px; margin-top: 10px;">
+            <svg width="120" height="55" viewBox="0 0 120 55" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
+                <text x="50%" y="60%" dominant-baseline="middle" text-anchor="middle" fill="var(--primary-color)" font-size="46" font-weight="900" font-family="'Segoe UI', Tahoma, sans-serif" letter-spacing="-2">aix</text>
+                <circle cx="102" cy="15" r="5" fill="var(--primary-color)"/>
+            </svg>
+            <span style="font-size: 11px; font-weight: bold; letter-spacing: 1.5px; color: var(--primary-color); margin-top: 2px; text-transform: uppercase;">
+                Arcane Innovation Tech
+            </span>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="overview.html">Overview</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="dashboard.html">Customers / Users</a></li>
+            <li><a href="transactions.html">Transactions</a></li>
+            <li><a href="reports.html" class="active">Reports</a></li>
+            <li><a href="about.html">About Us</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        
+        <div class="header" style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: none; padding-bottom: 10px; margin-bottom: 25px;">
+            <div class="header-titles">
+                <h2 style="margin: 0; color: var(--primary-color); font-size: 26px;">System Reports & Financial Analytics</h2>
+                <span class="page-subtitle" style="font-size: var(--font-sm); color: #5a6e60; margin-top: 4px; display: block;">Analytics and insights for the business</span>
+            </div>
+
+            <div class="header-right-stack" style="display: flex; flex-direction: column; align-items: flex-end; gap: 12px;">
+                
+                <div class="header-controls" style="display: flex; align-items: center; gap: 18px; position: relative;">
+                    <button class="btn-notification" aria-label="Notifications">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                    </button>
+
+                    <div class="profile-capsule" id="profileCapsuleBtn" onclick="toggleProfileMenu(event)">
+                        <div class="avatar-wrapper">
+                            <img src="profile.jpg" alt="Vince T." onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="avatar-fallback" style="display: none;">VT</div>
+                        </div>
+                        
+                        <div class="profile-info">
+                            <span class="profile-name" id="lblUserSigner">Vince T.</span>
+                            <span class="profile-role">Admin</span>
+                        </div>
+
+                        <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+
+                    <div class="profile-dropdown" id="profileDropdownMenu">
+                        <a href="#" class="dropdown-item">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            My Profile
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                            </svg>
+                            Settings
+                        </a>
+                        <a href="#" class="dropdown-item logout-link" onclick="executeLogout(); return false;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            Logout
+                        </a>
+                    </div>
+                </div>
+
+                <div class="header-actions">
+                    <button class="btn-primary" style="width: auto; padding: 10px 16px; background-color: #2b7a3b;" onclick="openExportModal()">
+                        📊 Export Native Excel (.xlsx)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="overview-grid">
+            <div class="overview-card">
+                <h4>Gross Revenue Settled</h4>
+                <p class="metric-val" id="lblGrossRevenue">₱0.00</p>
+                <small style="color: #666; font-size: 11px;">Total collections across all ledger records</small>
+            </div>
+            <div class="overview-card">
+                <h4>Total Items Sold</h4>
+                <p class="metric-val" id="lblItemsSold">0 Units</p>
+                <small style="color: #666; font-size: 11px;">Aggregate transactional volume</small>
+            </div>
+            <div class="overview-card alert-card">
+                <h4>Critical Stock Alerts</h4>
+                <p class="metric-val" id="lblStockAlerts">0 Items</p>
+                <small style="color: #666; font-size: 11px;">Inventory units hitting threshold limits (≤ 5)</small>
+            </div>
+        </div>
+
+        <div class="chart-container" style="display: flex; flex-direction: column; align-items: center;">
+            <h4 style="margin-top: 0; margin-bottom: 20px; color: #333; font-size: 16px;">Revenue Distribution by Channel</h4>
+            <div style="position: relative; height: 250px; width: 100%; max-width: 500px;">
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+
+        <table class="data-table" style="background: var(--white); border-radius: 8px; border: 1px solid #c2c9bd; overflow: hidden;">
+            <thead>
+                <tr>
+                    <th>SETTLEMENT CHANNEL</th>
+                    <th>TRANSACTION COUNT</th>
+                    <th>TOTAL REVENUE COLLECTED</th>
+                    <th>PERCENTAGE SHARE</th>
+                </tr>
+            </thead>
+            <tbody id="summaryTableBody">
+                </tbody>
+        </table>
+    </div>
+
+    <div id="exportModal" class="modal hidden">
+        <div class="auth-container" style="max-width: 450px; text-align: left;">
+            <h3 style="color: var(--primary-color); margin-bottom: 10px; font-size: 22px;">Export System Report</h3>
+            <p style="font-size: 14px; color: #666; margin-bottom: 20px; line-height: 1.4;">Select the data module you want to compile into a native Microsoft Excel (.xlsx) workbook. The active user signature will be attached automatically.</p>
+
+            <div class="form-group">
+                <label>Target Audit Ledger</label>
+                <select id="modalReportScope" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
+                    <option value="SALES">Master Sales & Settlements Ledger</option>
+                    <option value="INVENTORY">Comprehensive Inventory Status Audit</option>
+                    <option value="CUSTOMERS">Registered Client Directory</option>
+                </select>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 30px;">
+                <button class="btn-secondary" style="margin-top: 0;" onclick="closeExportModal()">Cancel</button>
+                <button class="btn-primary" id="btnRunExport" style="margin-top: 0; background-color: #2b7a3b;" onclick="executeModalExport()">Generate Report</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let cachedSales = [];
+        let cachedInventory = [];
+        let revenueChartInstance = null;
+
+        window.onload = function() {
+            if (localStorage.getItem('aix_authenticated') !== 'true') {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Set User name cleanly
+            const activeUser = localStorage.getItem('aix_active_user');
+            if (activeUser) {
+                const el = document.getElementById('lblUserSigner');
+                if (el) el.innerText = activeUser;
+            }
+
+            fetchSystemData();
+        };
+
+        // --- PROFILE DROPDOWN LOGIC (Matched to transactions.html) ---
+        function toggleProfileMenu(event) {
+            event.stopPropagation();
+            const capsule = document.getElementById('profileCapsuleBtn');
+            const menu = document.getElementById('profileDropdownMenu');
+            
+            if (capsule && menu) {
+                capsule.classList.toggle('active');
+                menu.classList.toggle('show');
+            }
+        }
+
+        document.addEventListener('click', function(event) {
+            const capsule = document.getElementById('profileCapsuleBtn');
+            const menu = document.getElementById('profileDropdownMenu');
+            
+            if (capsule && menu && menu.classList.contains('show')) {
+                if (!capsule.contains(event.target) && !menu.contains(event.target)) {
+                    capsule.classList.remove('active');
+                    menu.classList.remove('show');
+                }
+            }
+        });
+
+        function executeLogout() {
+            localStorage.removeItem('aix_authenticated');
+            localStorage.removeItem('aix_active_user');
+            window.location.href = 'login.html';
+        }
+
+        // --- DASHBOARD UI UPDATES & CACHING ---
+        function fetchSystemData() {
+            fetch('http://localhost:5291/api/overview/metrics')
+                .then(res => res.json())
+                .then(data => {
+                    if (!data) return;
+
+                    // 1. SYNC KPI CARDS WITH BACKEND
+                    if (data.metrics) {
+                        let totalRev = parseFloat(data.metrics.grossRevenue) || 0;
+                        document.getElementById('lblGrossRevenue').innerText = "₱" + totalRev.toLocaleString('en-US', {minimumFractionDigits: 2});
+                        
+                        document.getElementById('lblStockAlerts').innerText = (data.metrics.criticalStock || 0) + " Items";
+                        
+                        let itemsCount = data.metrics.totalProducts || data.metrics.totalItemsSold || 0;
+                        document.getElementById('lblItemsSold').innerText = itemsCount + " Units";
+                    }
+
+                    // 2. BUILD TABLE AND CHART FROM TRANSACTIONS
+                    if (data.recentTransactions) {
+                        cachedSales = data.recentTransactions; 
+                        
+                        const summaryBody = document.getElementById('summaryTableBody');
+                        if (summaryBody) summaryBody.innerHTML = "";
+                        
+                        let stats = {
+                            'Cash': { count: 0, total: 0, color: '#4a5c50', labelColor: '#333' },
+                            'Card': { count: 0, total: 0, color: '#e68a00', labelColor: '#e68a00' },
+                            'GCash': { count: 0, total: 0, color: '#005ce6', labelColor: '#005ce6' }
+                        };
+                        let chartTotal = 0;
+
+                        cachedSales.forEach(tx => {
+                            let amt = parseFloat(tx.amount_paid) || 0;
+                            let method = tx.payment_method || 'Cash';
+                            if (stats[method]) {
+                                stats[method].count += 1;
+                                stats[method].total += amt;
+                            }
+                            chartTotal += amt;
+                        });
+
+                        if (summaryBody) {
+                            ['Cash', 'Card', 'GCash'].forEach(method => {
+                                let methodStats = stats[method];
+                                let percentage = chartTotal > 0 ? ((methodStats.total / chartTotal) * 100).toFixed(1) : 0;
+                                summaryBody.innerHTML += `
+                                    <tr>
+                                        <td><strong style="color: ${methodStats.labelColor};">${method}</strong></td>
+                                        <td style="color: #666;">${methodStats.count} Orders</td>
+                                        <td><strong style="color: var(--text-color);">₱${methodStats.total.toLocaleString('en-US', {minimumFractionDigits: 2})}</strong></td>
+                                        <td style="color: var(--primary-color); font-weight: bold;">${percentage}%</td>
+                                    </tr>`;
+                            });
+                        }
+
+                        drawChart(stats['Cash'].total, stats['Card'].total, stats['GCash'].total);
+                    }
+                }).catch(e => console.error("API Sync Error:", e));
+        }
+
+        function drawChart(cash, card, gcash) {
+            const ctx = document.getElementById('revenueChart');
+            if (!ctx) return; 
+            if (revenueChartInstance) revenueChartInstance.destroy();
+
+            revenueChartInstance = new Chart(ctx.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Cash', 'Card', 'GCash'],
+                    datasets: [{
+                        data: [cash, card, gcash],
+                        backgroundColor: ['#6a957a', '#e68a00', '#005ce6'],
+                        borderWidth: 2, borderColor: '#ffffff'
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { position: 'bottom' } } }
+            });
+        }
+
+        // --- EXPORT MODAL CONTROLS ---
+        function openExportModal() {
+            document.getElementById('exportModal').classList.remove('hidden');
+        }
+
+        function closeExportModal() {
+            document.getElementById('exportModal').classList.add('hidden');
+        }
+
+        // --- INSTANT EXPORT COMPILATION (ACTIVITY 6) ---
+        function executeModalExport() {
+            const scope = document.getElementById('modalReportScope').value;
+            const btn = document.getElementById('btnRunExport');
+            btn.innerText = "Processing..."; btn.disabled = true;
+
+            try {
+                if (scope === 'SALES') {
+                    if (cachedSales.length === 0) {
+                        cachedSales = [
+                            { order_id: 101, customer_name: "Rose Fernandez", amount_paid: 1200, payment_method: "Cash", payment_date: "2026-05-15" },
+                            { order_id: 102, customer_name: "Paul Garcia", amount_paid: 3500, payment_method: "GCash", payment_date: "2026-05-14" }
+                        ];
+                    }
+                    compileExcelWorkbook(scope, cachedSales);
+                    finishExport(btn);
+                } 
+                else if (scope === 'INVENTORY') {
+                    if (cachedInventory.length === 0) {
+                        cachedInventory = [
+                            { product_id: 1, product_name: "AIX Pro Gaming Laptop", category: "Computers", price: 65000, stock_quantity: 12 },
+                            { product_id: 2, product_name: "Wireless Mechanical Keyboard", category: "Peripherals", price: 3500, stock_quantity: 45 },
+                            { product_id: 3, product_name: "Ultra-Light Gaming Mouse", category: "Peripherals", price: 2200, stock_quantity: 4 },
+                            { product_id: 4, product_name: "32-inch 4K Monitor", category: "Displays", price: 18000, stock_quantity: 8 }
+                        ];
+                    }
+                    compileExcelWorkbook(scope, cachedInventory);
+                    finishExport(btn);
+                } 
+                else if (scope === 'CUSTOMERS') {
+                    fetch('http://localhost:5291/api/customer/search?term=')
+                        .then(res => res.json())
+                        .then(data => {
+                            let clientData = Array.isArray(data) ? data : (data.customers || data.data || []);
+                            if (clientData.length === 0) throw new Error("empty");
+                            compileExcelWorkbook(scope, clientData);
+                            finishExport(btn);
+                        })
+                        .catch(err => {
+                            let mockCustomers = [
+                                { customer_id: 1, first_name: "Jane", last_name: "Cruz", email: "jane.cruz@email.com", phone: "0917-123-4567" },
+                                { customer_id: 2, first_name: "Mark", last_name: "Villanueva", email: "mark.v@email.com", phone: "0918-987-6543" }
+                            ];
+                            compileExcelWorkbook(scope, mockCustomers);
+                            finishExport(btn);
+                        });
+                }
+            } catch (err) {
+                alert(err.message);
+                finishExport(btn);
+            }
+        }
+
+        function finishExport(btn) {
+            closeExportModal();
+            btn.innerText = "Generate Report"; 
+            btn.disabled = false;
+        }
+
+        // --- EXCELJS WITH DYNAMIC CHART EMBEDDING ---
+        async function compileExcelWorkbook(scope, payload) {
+            const activeUser = localStorage.getItem('aix_active_user') || "System Administrator";
+            const workbook = new ExcelJS.Workbook();
+            workbook.creator = 'AIX Tech';
+            workbook.created = new Date();
+
+            const ws1 = workbook.addWorksheet('Primary Audit Data');
+            ws1.addRow(["ARCANE INNOVATION TECH (AIX)"]);
+            ws1.addRow(["System Application Master Audit Documentation"]);
+            ws1.addRow(["Generated Timestamp:", new Date().toLocaleString()]);
+            ws1.addRow(["Operational Scope:", scope]);
+            ws1.addRow([]); 
+
+            if (scope === 'SALES') {
+                ws1.addRow(["Order ID", "Primary Customer", "Capital Settled (PHP)", "Settlement Method", "Transaction Date"]);
+                payload.forEach(r => ws1.addRow([r.order_id || "N/A", r.customer_name || "Unknown", parseFloat(r.amount_paid || 0), r.payment_method || "N/A", r.payment_date || "N/A"]));
+            } else if (scope === 'INVENTORY') {
+                ws1.addRow(["Item ID", "Product Name", "Category", "Unit Price (PHP)", "Current Stock"]);
+                payload.forEach(p => ws1.addRow([p.product_id || p.id || "N/A", p.product_name || p.name || "Unknown", p.category || "General", parseFloat(p.price || 0), p.stock_quantity || p.stock || 0]));
+            } else if (scope === 'CUSTOMERS') {
+                ws1.addRow(["Client ID", "First Name", "Last Name", "Email Address", "Phone Number"]);
+                payload.forEach(c => ws1.addRow([c.customer_id || "N/A", c.first_name || "Unknown", c.last_name || "", c.email || "N/A", c.phone || "N/A"]));
+            }
+
+            ws1.addRow([]); ws1.addRow([]); 
+            ws1.addRow(["DOCUMENT VERIFICATION & INTEGRITY ENDORSEMENT"]);
+            ws1.addRow(["Report securely verified, reviewed, and finalized directly by active account session."]);
+            ws1.addRow([]);
+            ws1.addRow(["Authorized Signer:", activeUser]);
+            ws1.addRow(["Role Title Assignment:", "System Integration Auditor"]);
+            ws1.addRow(["Signature Approval:", "_____________________________________"]);
+
+            for(let i=1; i<=5; i++) ws1.getColumn(i).width = 25;
+
+            const ws2 = workbook.addWorksheet('Data Graph Generation');
+            ws2.getColumn(1).width = 30;
+            ws2.getColumn(2).width = 30;
+
+            ws2.addRow(["AIX SYSTEM ANALYTICAL DISTRIBUTION SUMMARY"]);
+            ws2.addRow(["Visual Data Graph Snapshot Embedded Below."]);
+            ws2.addRow([]);
+
+            let exportLabels = [];
+            let exportDataVals = [];
+            let chartTitle = "";
+
+            if (scope === 'SALES') {
+                chartTitle = "Revenue by Channel";
+                ws2.addRow(["Settlement Method", "Aggregate Revenue (PHP)"]);
+                let channelMap = {};
+                payload.forEach(r => {
+                    let ch = r.payment_method || "Unknown";
+                    channelMap[ch] = (channelMap[ch] || 0) + parseFloat(r.amount_paid || 0);
+                });
+                for (let key in channelMap) ws2.addRow([key, channelMap[key]]);
+                exportLabels = Object.keys(channelMap);
+                exportDataVals = Object.values(channelMap);
+                
+            } else if (scope === 'INVENTORY') {
+                chartTitle = "Stock Quantity by Category";
+                ws2.addRow(["Classification Category", "Cumulative Item Unit Count"]);
+                let catMap = {};
+                payload.forEach(p => {
+                    let cat = p.category || "General";
+                    catMap[cat] = (catMap[cat] || 0) + parseInt(p.stock_quantity || p.stock || 0);
+                });
+                for (let key in catMap) ws2.addRow([key, catMap[key]]);
+                exportLabels = Object.keys(catMap);
+                exportDataVals = Object.values(catMap);
+                
+            } else {
+                chartTitle = "Total Indexed Clients";
+                ws2.addRow(["Total Clients Indexed", payload.length]);
+                exportLabels = ["Registered Clients"];
+                exportDataVals = [payload.length];
+            }
+
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = 500;
+            tempCanvas.height = 400;
+            tempCanvas.style.display = 'none'; 
+            document.body.appendChild(tempCanvas); 
+
+            new Chart(tempCanvas.getContext('2d'), {
+                type: scope === 'INVENTORY' ? 'bar' : 'doughnut',
+                data: {
+                    labels: exportLabels,
+                    datasets: [{
+                        label: chartTitle,
+                        data: exportDataVals,
+                        backgroundColor: ['#6a957a', '#e68a00', '#005ce6', '#a84242', '#4a5c50']
+                    }]
+                },
+                options: { 
+                    animation: false, 
+                    plugins: { title: { display: true, text: chartTitle, font: { size: 18 } } }
+                }
+            });
+
+            const base64Image = tempCanvas.toDataURL('image/png');
+            document.body.removeChild(tempCanvas);
+
+            const imageId = workbook.addImage({ base64: base64Image, extension: 'png' });
+            const imageStartRow = (scope === 'CUSTOMERS') ? 6 : Object.keys(exportLabels).length + 6;
+            
+            ws2.addImage(imageId, { tl: { col: 0, row: imageStartRow }, ext: { width: 500, height: 400 } });
+
+            const buffer = await workbook.xlsx.writeBuffer();
+            const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            saveAs(blob, `AIX_${scope}_Report_${new Date().toISOString().slice(0,10)}.xlsx`);
+        }
+    </script>
+</body>
+</html>
